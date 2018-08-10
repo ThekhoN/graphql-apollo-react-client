@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  padding: 2.3rem;
+  font-family: "Courier", sans-serif;
+  color: #3f3d3d;
+}
+
+* {
+  box-sizing: border-box;
+}
