@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { graphql, compose } from "react-apollo";
 import "./style.css";
-import { getAuthorsQuery, addBookMutation } from "../../queries";
+import { getAuthorsQuery, addBookMutation, getBooksQuery } from "../../queries";
 
 class AddBook extends Component {
   state = {
@@ -41,6 +41,21 @@ class AddBook extends Component {
       author: e.target.value
     });
   };
+  addBooksQueryHandler = () => {
+    const { name, genre, authorId } = this.state;
+    this.props.addBookMutation({
+      variables: {
+        name,
+        genre,
+        authorId
+      },
+      refetchQueries: [
+        {
+          query: getBooksQuery
+        }
+      ]
+    });
+  };
   handleAddBookSubmit = e => {
     e.preventDefault();
     const { authorId } = this.state;
@@ -50,23 +65,11 @@ class AddBook extends Component {
           authorId: this.props.getAuthorsQuery.authors[0].id
         },
         () => {
-          const { name, genre, authorId } = this.state;
-          this.props.addBookMutation({
-            name,
-            genre,
-            authorId
-          });
-          console.log("submitting this.state: ", this.state);
+          this.addBooksQueryHandler();
         }
       );
     } else {
-      console.log("submitting this.state: ", this.state);
-      const { name, genre, authorId } = this.state;
-      this.props.addBookMutation({
-        name,
-        genre,
-        authorId
-      });
+      this.addBooksQueryHandler();
     }
   };
   render() {
